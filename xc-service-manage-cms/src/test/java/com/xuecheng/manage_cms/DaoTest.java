@@ -10,13 +10,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+/**
+ * Dao接口测试类
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = ManageCmsApplication.class)
-public class Daotest {
+public class DaoTest {
 
     @Autowired
     private CmsPageRepository cmsPageRepository;
 
+    /**
+     * 查询所有页面信息
+     */
     @Test
     public void testFindAll(){
         List<CmsPage> cmsPages = cmsPageRepository.findAll();

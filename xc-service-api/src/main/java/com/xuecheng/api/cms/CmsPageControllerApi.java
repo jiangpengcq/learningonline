@@ -68,4 +68,15 @@ public interface CmsPageControllerApi {
             @ApiImplicitParam(name = "pageId",value = "页面ID",required = true,paramType = "path",dataType = "string")
     })
     ResponseResult delete(String pageId);
+
+    /**
+     * 页面预览
+     *
+     * @param pageId
+     */
+    @ApiOperation("页面预览")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageId",value = "页面ID",required = true,paramType = "path",dataType = "string")
+    })
+    void preview(String pageId);
 }
