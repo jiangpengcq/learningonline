@@ -1,15 +1,15 @@
-package com.xuecheng.manage_cms.web.controller;
+package com.xuecheng.manage.cms.web.controller;
 
 import com.xuecheng.api.cms.CmsPageControllerApi;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.exception.ExceptionCast;
-import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.framework.web.BaseController;
-import com.xuecheng.manage_cms.service.PageService;
+import com.xuecheng.manage.cms.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +68,14 @@ public class CmsPageController extends BaseController implements CmsPageControll
             out.write(staticHtml.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
-            ExceptionCast.cast(CommonCode.SERVER_ERROR);
+            ExceptionCast.cast(CmsCode.CMS_COURSE_PERVIEWISNULL);
         }
+    }
+
+    @Override
+    @PutMapping("/postPage/{pageId}")
+    @ResponseBody
+    public ResponseResult postPage(@PathVariable("pageId") String pageId) {
+        return pageService.postPage(pageId);
     }
 }

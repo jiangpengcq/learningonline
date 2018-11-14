@@ -1,4 +1,4 @@
-package com.xuecheng.manage_cms.dao;
+package com.xuecheng.manage.cms.dao;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import org.springframework.data.mongodb.repository.MongoRepository;

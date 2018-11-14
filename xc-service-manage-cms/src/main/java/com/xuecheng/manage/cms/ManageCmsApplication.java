@@ -1,4 +1,4 @@
-package com.xuecheng.manage_cms;
+package com.xuecheng.manage.cms;
 
 
 import org.springframework.boot.SpringApplication;
@@ -12,17 +12,13 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EntityScan("com.xuecheng.framework.domain.cms")//扫描实体类
 @ComponentScan(basePackages={"com.xuecheng.api"})//扫描接口
-@ComponentScan(basePackages={"com.xuecheng.manage_cms"})//扫描本项目下的所有类
+@ComponentScan(basePackages={"com.xuecheng.manage.cms"})//扫描本项目下的所有类
 public class ManageCmsApplication {
     public static void main(String[] args) {
         SpringApplication.run(ManageCmsApplication.class, args);
     }
 
-    /**
-     * 用OkHttpClient配置RestTemplate，用于Java Http请求
-     *
-     * @return
-     */
+    //用OkHttpClient配置RestTemplate（用于Java Http请求）
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate(new OkHttp3ClientHttpRequestFactory());

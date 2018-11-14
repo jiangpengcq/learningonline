@@ -1,7 +1,7 @@
-package com.xuecheng.manage_cms;
+package com.xuecheng.manage.cms;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
-import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import com.xuecheng.manage.cms.dao.CmsPageRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,4 +7,14 @@ spring:
     mongodb:
       uri:  mongodb://root:r00t12345@localhost:27017
       database: xc_cms
-     # authentication-database: admin
+     #authentication-database: admin
+  rabbitmq:
+      host: localhost
+      port: 5672
+      username: admin
+      password: admin
+      virtual-host: /
+xuecheng:
+  mq:
+    exchange: ex_routing_cms_postpage
+

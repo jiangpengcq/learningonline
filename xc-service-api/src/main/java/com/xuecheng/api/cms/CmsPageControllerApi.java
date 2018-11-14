@@ -79,4 +79,10 @@ public interface CmsPageControllerApi {
             @ApiImplicitParam(name = "pageId",value = "页面ID",required = true,paramType = "path",dataType = "string")
     })
     void preview(String pageId);
+
+    @ApiOperation("页面发布")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageId",value = "页面ID",required = true,paramType = "path",dataType = "string")
+    })
+    ResponseResult postPage(String pageId);
 }
