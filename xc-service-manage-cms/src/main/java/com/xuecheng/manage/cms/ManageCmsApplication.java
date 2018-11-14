@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EntityScan("com.xuecheng.framework.domain.cms")//扫描实体类
+@ComponentScan(basePackages = {"com.xuecheng.framework"})//扫描common包下的类
 @ComponentScan(basePackages={"com.xuecheng.api"})//扫描接口
 @ComponentScan(basePackages={"com.xuecheng.manage.cms"})//扫描本项目下的所有类
 public class ManageCmsApplication {

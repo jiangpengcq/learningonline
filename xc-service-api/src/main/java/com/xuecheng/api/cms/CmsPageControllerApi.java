@@ -14,7 +14,12 @@ import io.swagger.annotations.ApiOperation;
 public interface CmsPageControllerApi {
     /**
      * 根据条件分页查询CmsPage页面信息集合
-     **/
+     *
+     * @param page
+     * @param size
+     * @param queryPageRequest
+     * @return
+     */
     @ApiOperation("分页条件查询页面")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "page", value = "页码", required = true, paramType = "path", dataType = "int"),
