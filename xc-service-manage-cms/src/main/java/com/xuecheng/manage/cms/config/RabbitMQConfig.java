@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    //交换机名称
     @Value("${xuecheng.mq.exchange}")
     private String EXCHANGE_NAME_POSTPAGE;
     //交换机Bean的名称
