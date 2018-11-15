@@ -3,6 +3,8 @@ package com.xuecheng.manage_course.controller;
 import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
 import com.xuecheng.framework.model.response.CommonCode;
@@ -53,6 +55,18 @@ public class CourseController implements CourseControllerApi {
         }else{
             return new ResponseResult(CommonCode.FAIL);
         }
+    }
+
+    @Override
+    @GetMapping("/teachPlan/findList/{courseId}")
+    public TeachplanNode findTeachPlanList(@PathVariable("courseId") String courseId) {
+        return courseService.findTeachPlanList(courseId);
+    }
+
+    @Override
+    @PostMapping("/teachPlan/add")
+    public ResponseResult addTeachPlan(@RequestBody Teachplan teachplan) {
+        return courseService.addTeachPlan(teachplan);
     }
 
     @Override

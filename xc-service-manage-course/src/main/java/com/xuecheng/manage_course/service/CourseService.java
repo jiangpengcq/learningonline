@@ -4,23 +4,26 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
+import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
+import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
-import com.xuecheng.manage_course.dao.CourseBaseRepository;
-import com.xuecheng.manage_course.dao.CourseMapper;
-import com.xuecheng.manage_course.dao.CourseMarketRepository;
+import com.xuecheng.manage_course.dao.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,10 @@ public class CourseService {
     private CourseBaseRepository courseBaseRepository;
     @Autowired
     private CourseMarketRepository courseMarketRepository;
+    @Autowired
+    private TeachPlanMapper teachPlanMapper;
+    @Autowired
+    private TeachPlanRepository teachPlanRepository;
 
     /**
      * 查询所有课程
@@ -148,5 +155,75 @@ public class CourseService {
             courseMarketRepository.save(one);
         }
         return one;
+    }
+
+    /**
+     * 查询课程计划
+     *
+     * @param courseId 课程ID
+     * @return 课程计划
+     */
+    public TeachplanNode findTeachPlanList(String courseId){
+        if (StringUtils.isEmpty(courseId)) ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        TeachplanNode teachPlanList = teachPlanMapper.findTeachPlanList(courseId);
+        if (ObjectUtils.isEmpty(teachPlanList)) ExceptionCast.cast(CourseCode.COURSE_PLAN_DATAISNULL);
+        return teachPlanList;
+    }
+
+    /**
+     * 添加课程计划
+     *
+     * @param teachplan 课程计划
+     * @return 操作结果
+     */
+    @Transactional
+    public ResponseResult addTeachPlan(Teachplan teachplan) {
+        if (ObjectUtils.isEmpty(teachplan) || StringUtils.isEmpty(teachplan.getCourseid()) || StringUtils.isEmpty(teachplan.getPname())) ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        CourseBase courseBase = getCoursebaseById(teachplan.getCourseid());
+        if (ObjectUtils.isEmpty(courseBase)) ExceptionCast.cast(CourseCode.COURSE_PUBLISH_COURSEBASEISNULL);
+        //判断是否有一级结点并获得父结点
+        Teachplan teachplanParent = getTeachPlanParent(courseBase,teachplan.getParentid());
+        int grade = Integer.parseInt(teachplanParent.getGrade())+1;
+        teachplan.setGrade(grade+"");
+        teachplan.setParentid(teachplanParent.getId());
+        teachPlanRepository.save(teachplan);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    //获得父结点（新课程就创建一级结点）
+    private Teachplan getTeachPlanParent(CourseBase courseBase, String parentId) {
+        Teachplan teachplanParent =null;
+        //查询一级结点
+        List<Teachplan> teachplans = teachPlanRepository.findAllByCourseidAndParentid(courseBase.getId(), "0");
+        if (ObjectUtils.isEmpty(teachplans)) {
+            //1.1 没有父课程计划会认为是新课程没有一级课程计划，需要创建一级课程计划并保存
+            teachplanParent = new Teachplan();
+            //保存课程Id
+            teachplanParent.setCourseid( courseBase.getId() );
+            //一级课程计划默认一级的为1
+            teachplanParent.setGrade( "1" );
+            //一级课程发布状态 0为未发布 1为发布
+            teachplanParent.setStatus( "0" );
+            //一级课程计划的父Id为0
+            teachplanParent.setParentid( "0" );
+            //一级课程计划的名称为课程名称
+            teachplanParent.setPname( courseBase.getName() );
+            //一级课程计划的级别为1
+            teachplanParent.setOrderby( 1 );
+            //一级课程的描述为课程描述
+            teachplanParent.setDescription( courseBase.getDescription() );
+            teachplanParent = teachPlanRepository.save( teachplanParent );
+        } else {
+            //1.2 如果有父课程计划则查询课程计划
+            if(StringUtils.isEmpty( parentId )) {
+                teachplanParent = teachplans.get( 0 );
+            } else {
+                Optional<Teachplan> tParentoptional = teachPlanRepository.findById( parentId );
+                if(!tParentoptional.isPresent())
+                    ExceptionCast.cast( CommonCode.INVALID_PARAM );
+                teachplanParent = tParentoptional.get();
+            }
+        }
+        return teachplanParent;
     }
 }

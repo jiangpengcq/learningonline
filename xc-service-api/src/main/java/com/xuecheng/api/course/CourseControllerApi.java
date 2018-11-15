@@ -2,6 +2,8 @@ package com.xuecheng.api.course;
 
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -59,4 +61,16 @@ public interface CourseControllerApi {
             @ApiImplicitParam(name = "courseMarket", value = "课程营销信息", required = true,  paramType = "body", dataType = "json")
     })
     ResponseResult updateCourseMarket(String id,CourseMarket courseMarket);
+
+    @ApiOperation("查询课程计划信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "courseId",value = "课程ID",required = true,paramType = "path",dataType = "string")
+    })
+    TeachplanNode findTeachPlanList(String courseId);
+
+    @ApiOperation("添加课程计划信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "teachplan",value = "课程计划",required = true,paramType = "body",dataType = "json")
+    })
+    ResponseResult addTeachPlan(Teachplan teachplan);
 }
